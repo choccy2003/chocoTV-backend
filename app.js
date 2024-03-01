@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'public/images')))
 
 app.use(cors({
-  origin: 'http://192.168.1.66:3000',
+  origin: 'https://chocotv-b21b3.web.app/',
   credentials: true
 }));
 app.get('/videos/:filename', (req, res) => {
