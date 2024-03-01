@@ -238,7 +238,7 @@ router.post("/handle-like", async (req, res, next) => {
 
       }
       else {
-        res.send("Such user doesnt exist")
+        res.send("Such user doesnt exist!")
       }
     }
     else {
