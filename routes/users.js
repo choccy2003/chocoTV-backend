@@ -36,8 +36,8 @@ router.post('/upload-video', upload.fields([{ name: 'mp4file' }, { name: 'jpgfil
     const { videoTitle, videoDescription, channelName, channelId } = req.body;
     const video = new Videos({ videoTitle, videoDescription, channelName, channelId });
     const saveVideo = await video.save();
-    const videoResourcePath = `http://localhost:3001/videos/${saveVideo._id}`;
-    const thumbnailResourcePath = `http://localhost:3001/images/${saveVideo._id}`;
+    const videoResourcePath = `https://chocotv.cyclic.app/videos/${saveVideo._id}`;
+    const thumbnailResourcePath = `https://chocotv.cyclic.app/images/${saveVideo._id}`;
     saveVideo.videoResourcePath = videoResourcePath;
     saveVideo.thumbnailResourcePath = thumbnailResourcePath;
     await saveVideo.save();
@@ -105,7 +105,7 @@ router.post('/login', async (req, res, next) => {
           const token = jwt.sign({ userId: userExist._id }, usersecretKey, { expiresIn: '30d' });
           res.cookie('token', token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             maxAge: 1000 * 60 * 60 * 24 * 60
           })
           res.json({ msg: "Success" })
@@ -426,7 +426,7 @@ router.post('/logout', async (req, res, next) => {
     if (tokenCookie) {
       res.cookie('token', "invalid token", {
         httpOnly: true,
-        secure: false,
+        secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 60
       })
       res.send("Successfully logged out!")
