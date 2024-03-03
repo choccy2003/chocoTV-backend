@@ -36,8 +36,8 @@ router.post('/upload-video', upload.fields([{ name: 'mp4file' }, { name: 'jpgfil
     const { videoTitle, videoDescription, channelName, channelId } = req.body;
     const video = new Videos({ videoTitle, videoDescription, channelName, channelId });
     const saveVideo = await video.save();
-    const videoResourcePath = `https://chocotv.cyclic.app/videos/${saveVideo._id}`;
-    const thumbnailResourcePath = `https://chocotv.cyclic.app/images/${saveVideo._id}`;
+    const videoResourcePath = `https://chocotv-backend.onrender.com/videos/${saveVideo._id}`;
+    const thumbnailResourcePath = `https://chocotv-backend.onrender.com/images/${saveVideo._id}`;
     saveVideo.videoResourcePath = videoResourcePath;
     saveVideo.thumbnailResourcePath = thumbnailResourcePath;
     await saveVideo.save();
