@@ -106,7 +106,6 @@ router.post('/login', async (req, res, next) => {
           res.cookie('token', token, {
             httpOnly: true,
             secure: false,
-            sameSite: 'None',
             maxAge: 1000 * 60 * 60 * 24 * 60
           })
           res.json({ msg: "Success" })
@@ -429,7 +428,6 @@ router.post('/logout', async (req, res, next) => {
         httpOnly: true,
         secure: false,
         maxAge: 1000 * 60 * 60 * 24 * 60,
-        sameSite: 'None'
       })
       res.send("Successfully logged out!")
     }
