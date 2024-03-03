@@ -105,7 +105,7 @@ router.post('/login', async (req, res, next) => {
           const token = jwt.sign({ userId: userExist._id }, usersecretKey, { expiresIn: '30d' });
           res.cookie('token', token, {
             httpOnly: true,
-            secure: true,
+            secure: false,
             maxAge: 1000 * 60 * 60 * 24 * 60
           })
           res.json({ msg: "Success" })
@@ -426,7 +426,7 @@ router.post('/logout', async (req, res, next) => {
     if (tokenCookie) {
       res.cookie('token', "invalid token", {
         httpOnly: true,
-        secure: true,
+        secure: false,
         maxAge: 1000 * 60 * 60 * 24 * 60
       })
       res.send("Successfully logged out!")
