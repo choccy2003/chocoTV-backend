@@ -103,12 +103,8 @@ router.post('/login', async (req, res, next) => {
         }
         else {
           const token = jwt.sign({ userId: userExist._id }, usersecretKey, { expiresIn: '30d' });
-          res.cookie('token', token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: "none",
-            maxAge: 1000 * 60 * 60 * 24 * 60
-          })
+          const maxAgeInSeconds = 1000 * 60 * 60 * 24 * 60;
+          res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Secure; SameSite=None; Max-Age=${maxAgeInSeconds}`);
           res.json({ msg: "Success" })
         }
       })
@@ -425,12 +421,8 @@ router.post('/logout', async (req, res, next) => {
   try {
     const tokenCookie = req.cookies.token
     if (tokenCookie) {
-      res.cookie('token', "invalid token", {
-        httpOnly: true,
-        secure: false,
-        sameSite: "none",
-        maxAge: 1000 * 60 * 60 * 24 * 60,
-      })
+      const maxAgeInSeconds = 1000 * 60 * 60 * 24 * 60;
+      res.setHeader('Set-Cookie', `token=invalid token; HttpOnly; Secure; SameSite=None; Max-Age=${maxAgeInSeconds}`);
       res.send("Successfully logged out!")
     }
     else {
