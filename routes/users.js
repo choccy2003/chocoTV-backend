@@ -600,4 +600,8 @@ router.get('/video/:filename', (req, res) => {
     res.status(404).send('Video not found');
   }
 });
+
+router.get("/cron-job", (req, res, next) => {
+  res.send("OK")
+})
 module.exports = router;
