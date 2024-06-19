@@ -557,25 +557,25 @@ router.post('/fetch-comments', async (req, res, next) => {
 router.get('/video/:filename', (req, res) => {
   const { filename } = req.params;
   const videoPath = path.join(__dirname, '..', 'public', 'videos', filename);
-  console.log(videoPath)
+
   if (fs.existsSync(videoPath)) {
     const stat = fs.statSync(videoPath);
     const fileSize = stat.size;
 
-    // Parse Range header from the request
     const range = req.headers.range;
+    const maxChunkSize = 1 * 1024 * 1024; // 1 MB
 
     if (range) {
-      // Parse range values
       const parts = range.replace(/bytes=/, "").split("-");
       const start = parseInt(parts[0], 10);
-      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      let end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
 
-      // Calculate chunk size and create Readable stream with appropriate range
+      // Adjust the end position to ensure it doesn't exceed the maximum chunk size
+      end = Math.min(end, start + maxChunkSize - 1);
+
       const chunkSize = (end - start) + 1;
       const fileStream = fs.createReadStream(videoPath, { start, end });
 
-      // Set response headers
       res.writeHead(206, {
         'Content-Range': `bytes ${start}-${end}/${fileSize}`,
         'Accept-Ranges': 'bytes',
@@ -583,16 +583,13 @@ router.get('/video/:filename', (req, res) => {
         'Content-Type': 'video/mp4'
       });
 
-      // Pipe the Readable stream to response
       fileStream.pipe(res);
     } else {
-      // No Range header provided, serve the entire file
       res.writeHead(200, {
         'Content-Length': fileSize,
         'Content-Type': 'video/mp4'
       });
 
-      // Create Readable stream for the entire file and pipe it to response
       const fileStream = fs.createReadStream(videoPath);
       fileStream.pipe(res);
     }
@@ -600,6 +597,7 @@ router.get('/video/:filename', (req, res) => {
     res.status(404).send('Video not found');
   }
 });
+
 
 router.get("/cron-job", (req, res, next) => {
   res.send("OK")
